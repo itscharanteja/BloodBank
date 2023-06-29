@@ -160,9 +160,7 @@
         console.log({ donorData });
 
         // Insert donor data into Supabase table``
-        const { data, error } = await supabase
-          .from("bbank")
-          .insert([donorData]);
+        const { data, error } = await supabase.from("bank").insert([donorData]);
 
         if (error) {
           console.error("Error inserting donor data:", error);

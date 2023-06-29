@@ -85,7 +85,7 @@
       };
 
       const fetchDonorData = async () => {
-        const { data, error } = await supabase.from("bbank").select("*");
+        const { data, error } = await supabase.from("bank").select("*");
 
         if (error) {
           console.error("Error fetching donor data:", error);
