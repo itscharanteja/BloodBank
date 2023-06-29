@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Blood Donation Form</title>
+    <style>
+      /* Style for search bar */
+
+      #search-bar {
+        float: top;
+        margin: 10px;
+        display: inline;
+      }
+
+      /* Style for form */
+      .form-container {
+        max-width: 400px;
+        margin: 0 auto;
+      }
+
+      .form-container label,
+      .form-container input[type="text"],
+      .form-container select {
+        display: block;
+        margin-bottom: 10px;
+      }
+
+      .form-container input[type="submit"] {
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      .donate-button {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+      }
+      h1 {
+        text-align: center;
+      }
+      form {
+        max-width: 400px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-radius: 5px;
+      }
+      input[type="text"],
+      input[type="email"],
+      select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        float: right;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      tr:hover {
+        background-color: #f5f5f5;
+      }
+      .btn-danger {
+        background-color: #f44336;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="don">
+      <!-- <img src="bbank.jpeg" alt="Blood Bank" /> -->
+      <div id="search-bar">
+        <a href="./donor-data.html" class="donate-button" id="details"
+          >Donor Details</a
+        >
+      </div>
+
+      <div class="form-container">
+        <h2>Blood Donation Form</h2>
+        <form id="donors" action="" method="POST">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required />
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required />
+
+          <label for="bloodGroup">Blood Type:</label>
+          <select id="bloodGroup" name="bloodGroup" required>
+            <option value="None">None</option>
+            <option value="A+">A+</option>
+            <option value="A-">A-</option>
+            <option value="B+">B+</option>
+            <option value="B-">B-</option>
+            <option value="AB+">AB+</option>
+            <option value="AB-">AB-</option>
+            <option value="O+">O+</option>
+            <option value="O-">O-</option>
+          </select>
+
+          <label for="phone">Phone:</label>
+          <input type="text" id="phone" name="phone" required />
+
+          <input type="submit" value="Donate" />
+        </form>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/@supabase/supabase-js"></script>
+    <script type="module">
+      const supabaseUrl = "https://keerrggipsskzhzfzicg.supabase.co";
+      const supabaseKey =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtlZXJyZ2dpcHNza3poemZ6aWNnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODc4NDI2MDAsImV4cCI6MjAwMzQxODYwMH0.MRp3meFNt2rdgxDRXr4_W3-Vdm0qbxxm9dSeRNYr9yQ";
+      const handleFormSubmit = async (fromEvent) => {
+        //   debugger;
+        fromEvent.preventDefault();
+
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        const form = document.getElementById("donors");
+        const formData = new FormData(form);
+        // Extract form data
+        const donorData = {
+          name: formData.get("name"),
+          email: formData.get("email"),
+          bloodGroup: formData.get("bloodGroup"),
+          phone: formData.get("phone"),
+        };
+        if (donorData["bloodGroup"] === "None") {
+          alert("Please select a valid blood type");
+          return;
+        }
+
+        console.log({ donorData });
+
+        // Insert donor data into Supabase table``
+        const { data, error } = await supabase.from("bank").insert([donorData]);
+
+        if (error) {
+          console.error("Error inserting donor data:", error);
+        } else {
+          console.log("Donor data inserted successfully:", data);
+        }
+        alert("Donor data inserted successfully ");
+      };
+
+      const form1 = document.getElementById("donors");
+
+      form1.addEventListener("submit", handleFormSubmit);
+    </script>
+  </body>
+</html>
